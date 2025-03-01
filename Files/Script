@@ -1,0 +1,13 @@
+add
+add
+add_if_max
+save
+show
+help
+info
+history
+print_ascending
+print_field_ascending_distance
+sum_of_dictance
+remove_by_id 1
+execute_script Files/script1 Files/Data
