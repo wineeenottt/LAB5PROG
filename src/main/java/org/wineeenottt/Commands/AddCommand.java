@@ -48,8 +48,6 @@ public class AddCommand implements Command {
                 routeFieldsReader.readDistance()
         );
         System.out.println("Маршрут добавлен");
-
-        routeFieldsReader.clearInputData();
     }
 
     /**

@@ -48,10 +48,6 @@ public class RouteFieldsReader {
         return userIO.readLine().trim();
     }
 
-    public void clearInputData(){
-        scanner = null;
-    }
-
     public String readName() {
         while (true) {
             String str = readNextValue("Name (not null): ");

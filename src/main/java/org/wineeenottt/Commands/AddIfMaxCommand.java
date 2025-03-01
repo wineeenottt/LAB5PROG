@@ -76,8 +76,6 @@ public class AddIfMaxCommand implements Command {
 
         collectionManager.addIfMaxIdRoute(id, newRoute.getName(), newRoute.getCoordinates(), newRoute.getCreationDate(), newRoute.getFrom(), newRoute.getTo(), newRoute.getDistance());
         System.out.println("Маршрут добавлен");
-
-        routeFieldsReader.clearInputData();
     }
 
     /**

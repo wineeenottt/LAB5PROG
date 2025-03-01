@@ -21,9 +21,6 @@ public class UpdateElementCommand implements CommandWithArguments {
 
     @Override
     public void execute() {
-//        if(inputFile != null){
-//            executeFromFile();
-//        }
         try {
             if (collectionManager.containsIdRoute(Integer.parseInt(commandArguments[0]))) {
                 userIO.printCommandText(collectionManager.getFieldNames());
