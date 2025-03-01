@@ -17,24 +17,24 @@ public class CommandInvoker {
     /**
      * Коллекция команд без дополнительных аргументов, которые записываются с новой строки
      */
-    private HashMap<String, Command> hashMapCommands;
+    private final HashMap<String, Command> hashMapCommands;
     /**
      * Поле, хранящее ссылку на объект класса CollectionManager
      */
-    private CollectionManager collectionManager;
+    private final CollectionManager collectionManager;
     /**
      * Поле, хранящее ссылку на объект класса UserIO
      */
-    private UserIO userIO;
+    private final UserIO userIO;
     /**
      * Поле, хранящее строку, в которой записан адрес файла, куда следует сохранять полученную коллекцию (экземпляры коллекции)
      */
-    private String inputFile;
+    private final String inputFile;
     private String inputData;
     /**
      * Поле, хранящее ссылку на объект, осуществляющий чтение полей из указанного в userIO потока ввода
      */
-    private RouteFieldsReader routeFieldsReader;
+    private final RouteFieldsReader routeFieldsReader;
     /**
      * Поле, хранящее объект класса ExecuteScript.Script
      */
@@ -107,8 +107,7 @@ public class CommandInvoker {
 
         if (hashMapCommands.containsKey(commandKey)) {
             Command command = hashMapCommands.get(commandKey);
-            if (command instanceof CommandWithArguments) {
-                CommandWithArguments commandWithArgs = (CommandWithArguments) command;
+            if (command instanceof CommandWithArguments commandWithArgs) {
                 commandWithArgs.getCommandArguments(args);
                 commandWithArgs.execute();
             } else {

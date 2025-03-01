@@ -76,7 +76,7 @@ public class FileManager {
      * Записывает набор маршрутов в CSV файл.
      *
      * @param filePath путь к файлу, в который будут записаны данные
-     * @param routes набор маршрутов для записи
+     * @param routes   набор маршрутов для записи
      */
     public void parseToCsv(String filePath, Set<Route> routes) {
         try (FileWriter writer = new FileWriter(filePath)) {
@@ -112,6 +112,12 @@ public class FileManager {
      * @return максимальный ID или -1, если набор пуст
      */
     public int findMaxId(Set<Route> routes) {
-        return routes.stream().mapToInt(Route::getId).max().orElse(-1);
+        int maxId = -1;
+        for (Route route : routes) {
+            if (route.getId() > maxId) {
+                maxId = route.getId();
+            }
+        }
+        return maxId;
     }
 }

@@ -45,11 +45,16 @@ public class CollectionManager {
         if (hashSetRouteCollection.isEmpty()) {
             System.out.println("Коллекция пуста");
         } else {
-            hashSetRouteCollection.stream()
-                    .sorted(Comparator.comparing(Route::getId))
-                    .forEach(System.out::println);
+            List<Route> routeList = new ArrayList<>(hashSetRouteCollection);
+
+            routeList.sort((r1, r2) -> Integer.compare(r1.getId(), r2.getId()));
+
+            for (Route route : routeList) {
+                System.out.println(route);
+            }
         }
     }
+
 
     /**
      * Метод, удаляющий все элементы коллекции
@@ -112,11 +117,16 @@ public class CollectionManager {
         if (hashSetRouteCollection.isEmpty()) {
             System.out.println("Коллекция пуста");
         } else {
-            hashSetRouteCollection.stream()
-                    .sorted(Comparator.comparingInt(Route::getId))
-                    .forEach(route -> System.out.println("ID: " + route.getId() + ", Name: " + route.getName()));
+            List<Route> routeList = new ArrayList<>(hashSetRouteCollection);
+
+           routeList.sort((r1, r2) -> Integer.compare(r1.getId(), r2.getId()));
+
+            for (Route route : routeList) {
+                System.out.println("ID: " + route.getId() + ", Name: " + route.getName());
+            }
         }
     }
+
 
     public void removeById(Integer id) {
         if (hashSetRouteCollection.isEmpty()) {

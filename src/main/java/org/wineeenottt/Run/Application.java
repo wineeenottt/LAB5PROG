@@ -60,10 +60,8 @@ public class Application {
                 throw new IOException("Ошибка с файлом");
             }
 
-            // Чтение маршрутов из CSV
             routes = csvParser.parseCsvFile(inputFile);
 
-            // Создаём CollectionManager после загрузки маршрутов
             collectionManager = new CollectionManager(routes);
 
             userIO.printCommandText("Элементы коллекции из указанного файла были загружены\n");
