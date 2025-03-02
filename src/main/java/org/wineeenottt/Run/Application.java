@@ -70,12 +70,13 @@ public class Application {
             return;
         }
 
-        // Теперь создаём RouteFieldsReader и CommandInvoker, передавая уже созданный collectionManager
         routeFieldsReader = new RouteFieldsReader(userIO, collectionManager);
         commandInvoker = new CommandInvoker(collectionManager, userIO, inputFile, routeFieldsReader);
 
+
         try {
             cycle();
+
         } catch (NoSuchElementException ex) {
             System.err.println("Ошибка ввода: " + ex.getMessage());
         }
@@ -86,9 +87,10 @@ public class Application {
      * Программа продолжает выполнение, пока пользователь не завершит её вводом соответствующей команды.
      */
     public void cycle() {
-        userIO.printCommandText("Программа была запущена\n");
+        userIO.printCommandText("Программа запущена\n");
+        commandInvoker.execute("help");
         while (true) {
-            userIO.printCommandText("\nВведите название команды:\n");
+            userIO.printCommandText("\nВведите название команды:)\n");
             userIO.printPreamble();
             String line = userIO.readLine();
             commandInvoker.execute(line);

@@ -33,7 +33,7 @@ public class FileManager {
             while ((line = reader.readLine()) != null) {
                 if (isFirstLine) {
                     isFirstLine = false;
-                    continue; // Skip header
+                    continue;
                 }
                 String[] fields = line.split(",");
                 if (fields.length < 14) {
@@ -80,10 +80,9 @@ public class FileManager {
      */
     public void parseToCsv(String filePath, Set<Route> routes) {
         try (FileWriter writer = new FileWriter(filePath)) {
-            // Записываем заголовки
-            writer.write("id,name,coordinate_x,coordinate_y,creation_date,from_x,from_y,from_z,from_name,to_x,to_y,to_z,to_name,distance\n");
 
-            // Записываем данные маршрутов
+            writer.write("id,name,coordinateX,coordinateY,creationDate,fromX,fromY,fromZ,fromName,toX,toY,toZ,toName,distance\n");
+
             for (Route route : routes) {
                 writer.write(route.getId() + "," +
                         route.getName() + "," +

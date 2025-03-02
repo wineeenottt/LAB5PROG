@@ -119,7 +119,7 @@ public class CollectionManager {
         } else {
             List<Route> routeList = new ArrayList<>(hashSetRouteCollection);
 
-           routeList.sort((r1, r2) -> Integer.compare(r1.getId(), r2.getId()));
+           routeList.sort(Comparator.comparing(Route::getId));
 
             for (Route route : routeList) {
                 System.out.println("ID: " + route.getId() + ", Name: " + route.getName());
@@ -191,6 +191,23 @@ public class CollectionManager {
         FileManager csvParser = new FileManager();
         csvParser.parseToCsv(filePath, hashSetRouteCollection);
     }
+
+    public String getFieldNames() {
+        return "Список всех полей: \n" +
+                "Name (String)\n" +
+                "CoordinateX (Double)\n" +
+                "CoordinateY (Float)\n" +
+                "LocationFromX (Float)\n" +
+                "LocationFromY (Integer)\n" +
+                "LocationFromZ (Double)\n" +
+                "LocationFromName (String)\n" +
+                "LocationToX (Float)\n" +
+                "LocationToY (Integer)\n" +
+                "LocationToZ (Double)\n" +
+                "LocationToName (String)\n" +
+                "Distance (Long)\n";
+    }
+
     public void update(Integer id, String field, String value) {
         try {
             for (Route route : hashSetRouteCollection) {
@@ -200,7 +217,7 @@ public class CollectionManager {
                             route.setName(validateString(value));
                             break;
                         case "CoordinateX":
-                            route.setCoordinateX(parseDouble(value));
+                            route.setCoordinateX(parseDoubleWithMax(value));
                             break;
                         case "CoordinateY":
                             route.setCoordinateY(parseFloat(value));
@@ -215,7 +232,7 @@ public class CollectionManager {
                             route.getFrom().setZ(parseDouble(value));
                             break;
                         case "LocationFromName":
-                            route.getFrom().setName(validateNullableString(value));
+                            route.getFrom().setName(validateString(value));
                             break;
                         case "LocationToX":
                             route.getTo().setX(parseFloat(value));
@@ -227,10 +244,10 @@ public class CollectionManager {
                             route.getTo().setZ(parseDouble(value));
                             break;
                         case "LocationToName":
-                            route.getTo().setName(validateNullableString(value));
+                            route.getTo().setName(validateString(value));
                             break;
                         case "Distance":
-                            route.setDistance(parseLong(value));
+                            route.setDistance(parseLongWithMin(value));
                             break;
                         case "Stop":
                             return;
@@ -249,45 +266,66 @@ public class CollectionManager {
             System.err.println("Ошибка: Значение не может быть пустым");
         }
     }
-    public String getFieldNames() {
-        return "Список всех полей: \n" +
-                "Name (String)\n" +
-                "CoordinateX (Double)\n" +
-                "CoordinateY (Float)\n" +
-                "LocationFromX (Float)\n" +
-                "LocationFromY (Integer)\n" +
-                "LocationFromZ (Double)\n" +
-                "LocationFromName (String)\n" +
-                "LocationToX (Float)\n" +
-                "LocationToY (Integer)\n" +
-                "LocationToZ (Double)\n" +
-                "LocationToName (String)\n" +
-                "Distance (Long)\n";
+
+    private Double parseDoubleWithMax(String value) {
+        try {
+            if (value == null || value.isEmpty()) throw new NullPointerException("Значение не может быть пустым");
+            double parsedValue = Double.parseDouble(value);
+            if (parsedValue > 750) {
+                throw new IllegalArgumentException("Значение CoordinateX не может быть больше " + (double) 750);
+            }
+            return parsedValue;
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException("Неверный формат для Double: " + value);
+        }
     }
 
+    private Long parseLongWithMin(String value) {
+        if (value == null || value.isEmpty()) throw new NullPointerException("Значение не может быть пустым");
+        try {
+            long parsedValue = Long.parseLong(value);
+            if (parsedValue <= 1) {
+                throw new IllegalArgumentException("Значение Distance должно быть больше " + (long) 1);
+            }
+            return parsedValue;
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException("Неверный формат для Long: " + value);
+        }
+    }
     private String validateString(String value) {
-        if (value.isEmpty()) throw new NullPointerException("Значение не может быть пустым");
+        if (value == null || value.isEmpty()) throw new NullPointerException("Значение не может быть пустым");
         return value;
     }
-
-    private String validateNullableString(String value) {
-        return value.isEmpty() ? null : value;
-    }
-
     private Double parseDouble(String value) {
-        return value.isEmpty() ? null : Double.parseDouble(value);
+        if (value == null || value.isEmpty()) {
+            throw new NullPointerException("Значение не может быть пустым");
+        }
+        try {
+            return Double.parseDouble(value);
+        } catch (NumberFormatException ex) {
+            throw new NumberFormatException("Неверный формат для Double: " + value);
+        }
     }
 
     private Float parseFloat(String value) {
-        return value.isEmpty() ? 0f : Float.parseFloat(value);
+        if (value == null || value.isEmpty()) {
+            throw new NullPointerException("Значение не может быть пустым");
+        }
+        try {
+            return Float.parseFloat(value);
+        } catch (NumberFormatException ex) {
+            throw new NumberFormatException("Неверный формат для Float: " + value);
+        }
     }
 
     private Integer parseInteger(String value) {
-        return value.isEmpty() ? 0 : Integer.parseInt(value);
-    }
-
-    private Long parseLong(String value) {
-        if (value.isEmpty()) throw new NullPointerException("Значение не может быть пустым");
-        return Long.parseLong(value);
+        if (value == null || value.isEmpty()) {
+            throw new NullPointerException("Значение не может быть пустым");
+        }
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException ex) {
+            throw new NumberFormatException("Неверный формат для Integer: " + value);
+        }
     }
 }
