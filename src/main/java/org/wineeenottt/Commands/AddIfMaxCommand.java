@@ -37,7 +37,7 @@ public class AddIfMaxCommand implements Command {
      *
      * @param collectionManager объект класса CollectionManager, используемый для управления коллекцией.
      * @param routeFieldsReader объект класса RouteFieldsReader, используемый для чтения данных о маршруте.
-     * @param userIO объект класса UserIO, используемый для взаимодействия с пользователем.
+     * @param userIO            объект класса UserIO, используемый для взаимодействия с пользователем.
      */
     public AddIfMaxCommand(CollectionManager collectionManager, RouteFieldsReader routeFieldsReader, UserIO userIO) {
         this.collectionManager = collectionManager;

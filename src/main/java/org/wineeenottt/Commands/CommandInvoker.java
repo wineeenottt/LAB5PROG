@@ -4,49 +4,65 @@ import org.wineeenottt.Collection.CollectionManager;
 import org.wineeenottt.Utility.RouteFieldsReader;
 import org.wineeenottt.IO.UserIO;
 
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
 
 /**
- * Класс, через который осуществляется исполнение команд. Хранит коллекции всех существующих команд
+ * Класс CommandInvoker отвечает за вызов и выполнение команд, управляющих коллекцией маршрутов.
+ * Он хранит коллекцию команд, историю выполненных команд и обеспечивает их выполнение.
  */
 public class CommandInvoker {
+
     /**
-     * Коллекция команд без дополнительных аргументов, которые записываются с новой строки
+     * Коллекция команд, которые не требуют дополнительных аргументов и записываются с новой строки.
      */
     private final HashMap<String, Command> hashMapCommands;
+
     /**
-     * Поле, хранящее ссылку на объект класса CollectionManager
+     * Ссылка на объект класса CollectionManager, который управляет коллекцией маршрутов.
      */
     private final CollectionManager collectionManager;
+
     /**
-     * Поле, хранящее ссылку на объект класса UserIO
+     * Ссылка на объект класса UserIO, который обеспечивает взаимодействие с пользователем.
      */
     private final UserIO userIO;
+
     /**
-     * Поле, хранящее строку, в которой записан адрес файла, куда следует сохранять полученную коллекцию (экземпляры коллекции)
+     * Строка, содержащая адрес файла, куда следует сохранять коллекцию.
      */
     private final String inputFile;
-    private String inputData;
+
     /**
-     * Поле, хранящее ссылку на объект, осуществляющий чтение полей из указанного в userIO потока ввода
+     * Строка, содержащая входные данные для выполнения команды add.
+     */
+    private String inputData;
+
+    /**
+     * Ссылка на объект, который читает поля маршрута из указанного потока ввода.
      */
     private final RouteFieldsReader routeFieldsReader;
+
     /**
-     * Поле, хранящее объект класса ExecuteScript.Script
+     * Объект класса ExecuteScript.Script, который управляет выполнением скриптов.
      */
     ExecuteScriptCommand.Script script;
+
     /**
-     * Поле, хранящее список команд
+     * Список, хранящий историю выполненных команд.
      */
     ArrayList<String> commandsHistoryList = new ArrayList<>();
 
     /**
-     * Использование файла
-     * Конструктор класса. Внутри вызывается метод putCommands, добавляющий команды в коллекции команд, создается новый объект класса ExecuteScript.Script
+     * Конструктор класса CommandInvoker, используемый при работе с файлом.
+     * Инициализирует поля и добавляет команды в коллекцию команд.
+     *
+     * @param collectionManager Объект класса CollectionManager.
+     * @param userIO            Объект класса UserIO.
+     * @param inputFile         Адрес файла для сохранения коллекции.
+     * @param routeFieldsReader Объект класса RouteFieldsReader.
      */
     public CommandInvoker(CollectionManager collectionManager, UserIO userIO, String inputFile, RouteFieldsReader routeFieldsReader) {
         this.collectionManager = collectionManager;
@@ -59,8 +75,15 @@ public class CommandInvoker {
     }
 
     /**
-     * Использование скрипта
-     * Конструктор класса. Внутри вызывается метод putCommands, инициализируется поле, в которое присваивается существующий объект класса ExecuteScript.Script
+     * Конструктор класса CommandInvoker, используемый при работе со скриптом.
+     * Инициализирует поля и добавляет команды в коллекцию команд.
+     *
+     * @param collectionManager Объект класса CollectionManager.
+     * @param userIO            Объект класса UserIO.
+     * @param routeFieldsReader Объект класса RouteFieldsReader.
+     * @param script            Объект класса ExecuteScript.Script.
+     * @param inputFile         Адрес файла для сохранения коллекции.
+     * @param inputData         Входные данные для выполнения команды add.
      */
     public CommandInvoker(CollectionManager collectionManager, UserIO userIO, RouteFieldsReader routeFieldsReader, ExecuteScriptCommand.Script script, String inputFile, String inputData) {
         this.collectionManager = collectionManager;
@@ -75,7 +98,7 @@ public class CommandInvoker {
     }
 
     /**
-     * Метод, добавляющий команды в соответствующие им коллекции.
+     * Метод, добавляющий команды в коллекцию команд.
      */
     private void putCommands() {
         hashMapCommands.put("info", new InfoCommand(collectionManager));
@@ -87,28 +110,38 @@ public class CommandInvoker {
         hashMapCommands.put("print_field_ascending_distance", new PrintFieldAscendingDistanceCommand(collectionManager));
         hashMapCommands.put("print_ascending", new PrintAscendingCommand(collectionManager));
         hashMapCommands.put("help", new HelpCommand(hashMapCommands));
-        hashMapCommands.put("sum_of_dictance", new SumOfDistanceCommand(collectionManager));
+        hashMapCommands.put("sum_of_distance", new SumOfDistanceCommand(collectionManager));
         hashMapCommands.put("add", new AddCommand(collectionManager, routeFieldsReader));
         hashMapCommands.put("add_if_max", new AddIfMaxCommand(collectionManager, routeFieldsReader, userIO));
         hashMapCommands.put("update", new UpdateElementCommand(collectionManager, userIO));
         hashMapCommands.put("remove_by_id", new RemoveByIdCommand(collectionManager));
         hashMapCommands.put("execute_script", new ExecuteScriptCommand(collectionManager, routeFieldsReader, script, inputFile, inputData));
-        hashMapCommands.put("remove_greater", new RemoveGreaterCommand(collectionManager, routeFieldsReader));
+        hashMapCommands.put("remove_greater", new RemoveGreaterCommand(collectionManager));
     }
 
     /**
-     * Метод, который определяет из полученной строки команду, исполняет ее и передает ей необходимые аргументы.
-     * Если команда не распознана, то в стандартный поток вывода выводится соответствующее сообщение.
+     * Метод, который определяет команду из полученной строки, выполняет её и передает необходимые аргументы.
+     * Если команда не распознана, выводится соответствующее сообщение.
+     *
+     * @param firstCommandLine Строка, содержащая команду и её аргументы.
      */
     public void execute(String firstCommandLine) {
         String[] words = firstCommandLine.trim().split("\\s+");
         String commandKey = words[0].toLowerCase(Locale.ROOT);
         String[] args = Arrays.copyOfRange(words, 1, words.length);
 
+        boolean isScriptExecution = (inputData != null);
+
         if (hashMapCommands.containsKey(commandKey)) {
             Command command = hashMapCommands.get(commandKey);
+
             if (command instanceof CommandWithArguments commandWithArgs) {
                 commandWithArgs.getCommandArguments(args);
+
+                if (command instanceof UpdateElementCommand updateCommand) {
+                    updateCommand.setIsScriptExecution(isScriptExecution);
+                }
+
                 commandWithArgs.execute();
             } else {
                 command.execute();
@@ -120,7 +153,10 @@ public class CommandInvoker {
     }
 
     /**
-     * Метод, который добавляет команду в историю команд. Если размер списка команд достигает 11, удаляется самая старая команда, после чего добавляется новая
+     * Метод, добавляющий команду в историю команд.
+     * Если размер списка команд достигает 11, удаляется самая старая команда, после чего добавляется новая.
+     *
+     * @param string Команда, которую необходимо добавить в историю.
      */
     public void addToCommandsHistory(String string) {
         if (commandsHistoryList.size() == 11) {

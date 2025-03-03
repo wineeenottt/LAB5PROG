@@ -10,19 +10,63 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+/**
+ * Класс, предназначенный для чтения и валидации полей маршрута (Route).
+ * Поддерживает чтение данных как из файла, так и из пользовательского ввода.
+ */
 public class RouteFieldsReader {
 
+    /**
+     * Объект для взаимодействия с пользователем (ввод/вывод).
+     */
     private final UserIO userIO;
+
+    /**
+     * Менеджер коллекции, используемый для работы с данными.
+     */
     private CollectionManager collectionManager;
+
+    /**
+     * Сканер для чтения данных из файла.
+     */
     private Scanner scanner;
+
+    /**
+     * Массив строк, содержащий данные, считанные из файла.
+     */
     private String[] inputDataArray;
+
+    /**
+     * Индекс текущего элемента в массиве inputDataArray.
+     */
     private int inputIndex = 0;
 
+    /**
+     * Максимальное допустимое значение координаты X.
+     */
+    private final double MAXCOORDX = 750;
+
+    /**
+     * Минимальное допустимое значение расстояния (Distance).
+     */
+    private final long MINDIS = 1;
+
+    /**
+     * Конструктор класса RouteFieldsReader.
+     *
+     * @param userIO объект для взаимодействия с пользователем.
+     * @param  collectionManager менеджер коллекции.
+     */
     public RouteFieldsReader(UserIO userIO, CollectionManager collectionManager) {
         this.userIO = userIO;
         this.collectionManager = collectionManager;
     }
 
+    /**
+     * Устанавливает файл для чтения данных.
+     *
+     * @param fileName имя файла, из которого будут читаться данные.
+     */
     public void setInputData(String fileName) {
         try {
             scanner = new Scanner(new File(fileName));
@@ -34,6 +78,12 @@ public class RouteFieldsReader {
         inputIndex = 0;
     }
 
+    /**
+     * Читает следующее значение из файла или запрашивает его у пользователя.
+     *
+     * @param val сообщение, которое будет выведено пользователю, если данные читаются с консоли.
+     * @return следующее значение.
+     */
     private String readNextValue(String val) {
         while ((inputDataArray == null || inputIndex >= inputDataArray.length) && scanner != null && scanner.hasNextLine()) {
             inputDataArray = scanner.nextLine().trim().split(",");
@@ -48,6 +98,11 @@ public class RouteFieldsReader {
         return userIO.readLine().trim();
     }
 
+    /**
+     * Читает и валидирует имя маршрута.
+     *
+     * @return валидное имя маршрута.
+     */
     public String readName() {
         while (true) {
             String str = readNextValue("Name (not null): ");
@@ -56,15 +111,25 @@ public class RouteFieldsReader {
         }
     }
 
+    /**
+     * Читает и создает объект Coordinates.
+     *
+     * @return объект Coordinates.
+     */
     public Coordinates readCoordinates() {
         return new Coordinates(readCoordinateX(), readCoordinateY());
     }
 
+    /**
+     * Читает и валидирует координату X.
+     *
+     * @return валидное значение координаты X.
+     */
     public Double readCoordinateX() {
         while (true) {
             try {
                 double x = Double.parseDouble(readNextValue("CoordinateX (Double & x <= 750): "));
-                if (x > 750) throw new ValidValuesRangeException();
+                if (x > MAXCOORDX) throw new ValidValuesRangeException();
                 return x;
             } catch (ValidValuesRangeException e) {
                 System.out.println("Координата x имеет максимальное значение - 750");
@@ -74,26 +139,56 @@ public class RouteFieldsReader {
         }
     }
 
+    /**
+     * Читает и валидирует координату Y.
+     *
+     * @return валидное значение координаты Y.
+     */
     public float readCoordinateY() {
         return readFloat("CoordinateY (Float): ");
     }
 
+    /**
+     * Читает и создает объект Location.
+     *
+     * @return объект Location.
+     */
     public Location readLocation() {
         return new Location(readLocationCoordinateX(), readLocationCoordinateY(), readLocationCoordinateZ(), readLocationName());
     }
 
+    /**
+     * Читает и валидирует координату X для Location.
+     *
+     * @return валидное значение координаты X.
+     */
     public float readLocationCoordinateX() {
         return readFloat("Location coordinateX (Float): ");
     }
 
+    /**
+     * Читает и валидирует координату Y для Location.
+     *
+     * @return валидное значение координаты Y.
+     */
     public int readLocationCoordinateY() {
         return readInt("Location coordinateY (Int): ");
     }
 
+    /**
+     * Читает и валидирует координату Z для Location.
+     *
+     * @return валидное значение координаты Z.
+     */
     public double readLocationCoordinateZ() {
         return readDouble("Location coordinateZ (Double): ");
     }
 
+    /**
+     * Читает и валидирует имя для Location.
+     *
+     * @return валидное имя Location.
+     */
     public String readLocationName() {
         while (true) {
             String str = readNextValue("LocationName (not null): ");
@@ -102,11 +197,16 @@ public class RouteFieldsReader {
         }
     }
 
+    /**
+     * Читает и валидирует расстояние (Distance).
+     *
+     * @return валидное значение расстояния.
+     */
     public long readDistance() {
         while (true) {
             try {
                 long distance = Long.parseLong(readNextValue("Distance (Long > 1): "));
-                if (distance <= 1) throw new ValidValuesRangeException();
+                if (distance <= MINDIS) throw new ValidValuesRangeException();
                 return distance;
             } catch (ValidValuesRangeException e) {
                 System.out.println("Distance должно быть больше 1");
@@ -116,6 +216,12 @@ public class RouteFieldsReader {
         }
     }
 
+    /**
+     * Читает и валидирует значение типа Float.
+     *
+     * @param val сообщение для пользователя.
+     * @return валидное значение типа Float.
+     */
     private float readFloat(String val) {
         while (true) {
             try {
@@ -126,6 +232,12 @@ public class RouteFieldsReader {
         }
     }
 
+    /**
+     * Читает и валидирует значение типа Double.
+     *
+     * @param val сообщение для пользователя.
+     * @return валидное значение типа Double.
+     */
     private double readDouble(String val) {
         while (true) {
             try {
@@ -136,6 +248,12 @@ public class RouteFieldsReader {
         }
     }
 
+    /**
+     * Читает и валидирует значение типа Integer.
+     *
+     * @param val сообщение для пользователя.
+     * @return валидное значение типа Integer.
+     */
     public int readInt(String val) {
         while (true) {
             try {

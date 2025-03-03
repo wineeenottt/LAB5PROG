@@ -16,12 +16,6 @@ public class RemoveGreaterCommand implements CommandWithArguments {
     private final CollectionManager collectionManager;
 
     /**
-     * Поле, хранящее ссылку на объект RouteFieldsReader.
-     * Используется для чтения данных о маршруте из указанного потока ввода.
-     */
-    private final RouteFieldsReader routeFieldsReader;
-
-    /**
      * Поле, хранящее аргументы команды.
      */
     private String[] commandArguments;
@@ -30,11 +24,9 @@ public class RemoveGreaterCommand implements CommandWithArguments {
      * Конструктор класса RemoveGreaterCommand.
      *
      * @param collectionManager объект класса CollectionManager, используемый для управления коллекцией.
-     * @param routeFieldsReader объект класса RouteFieldsReader, используемый для чтения данных о маршруте.
      */
-    public RemoveGreaterCommand(CollectionManager collectionManager, RouteFieldsReader routeFieldsReader) {
+    public RemoveGreaterCommand(CollectionManager collectionManager) {
         this.collectionManager = collectionManager;
-        this.routeFieldsReader = routeFieldsReader;
     }
 
     /**

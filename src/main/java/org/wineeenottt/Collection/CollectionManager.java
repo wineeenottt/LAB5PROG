@@ -6,21 +6,27 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+/**
+ * Класс CollectionManager управляет коллекцией маршрутов (Route), предоставляя методы для работы с ней.
+ * Коллекция хранится в виде HashSet, что обеспечивает уникальность элементов.
+ */
 public class CollectionManager {
 
     private static final String PATTERN = "yyyy-MM-dd HH:mm:ss";
     private int maxId;
     /**
-     * Коллекция, над которой будет осуществляться работа
+     * Коллекция маршрутов, над которой осуществляется работа.
      */
     private final HashSet<Route> hashSetRouteCollection;
     /**
-     * Время создания коллекции
+     * Время создания коллекции.
      */
     private final ZonedDateTime collectionCreation;
 
     /**
-     * Конструктор класса
+     * Конструктор класса CollectionManager.
+     *
+     * @param routes Набор маршрутов, который будет использоваться для инициализации коллекции.
      */
     public CollectionManager(Set<Route> routes) {
         this.hashSetRouteCollection = new HashSet<>(routes);
@@ -29,7 +35,8 @@ public class CollectionManager {
     }
 
     /**
-     * Метод, выводящий основную информацию о коллекции
+     * Выводит основную информацию о коллекции, включая тип коллекции, тип элементов,
+     * время создания и количество элементов.
      */
     public void infoAboutCollection() {
         System.out.println("Коллекция: " + hashSetRouteCollection.getClass().getSimpleName());
@@ -39,7 +46,8 @@ public class CollectionManager {
     }
 
     /**
-     * Метод, выводящий информацию по элементам коллекции
+     * Выводит информацию по всем элементам коллекции, отсортированным по ID.
+     * Если коллекция пуста, выводится соответствующее сообщение.
      */
     public void showElementsCollection() {
         if (hashSetRouteCollection.isEmpty()) {
@@ -55,16 +63,18 @@ public class CollectionManager {
         }
     }
 
-
     /**
-     * Метод, удаляющий все элементы коллекции
+     * Удаляет все элементы из коллекции.
      */
     public void clearAllCollection() {
         hashSetRouteCollection.clear();
     }
 
     /**
-     * Метод, выводящий булевый результат истины, если в коллекции существует элемент с выбранным id, иначе ложь
+     * Проверяет, существует ли в коллекции элемент с указанным ID.
+     *
+     * @param id ID маршрута, который необходимо проверить.
+     * @return true, если элемент с таким ID существует, иначе false.
      */
     public boolean containsIdRoute(Integer id) {
         for (Route route : hashSetRouteCollection) {
@@ -76,7 +86,9 @@ public class CollectionManager {
     }
 
     /**
-     * Метод, удаляющий из коллекции все элемента, превышающий заданный
+     * Удаляет из коллекции все элементы, ID которых превышает указанный.
+     *
+     * @param id ID, по которому происходит удаление элементов.
      */
     public void removeGreater(Integer id) {
         if (hashSetRouteCollection.isEmpty()) {
@@ -93,6 +105,10 @@ public class CollectionManager {
         }
     }
 
+    /**
+     * Выводит расстояния всех маршрутов в коллекции, отсортированные по возрастанию.
+     * Если коллекция пуста, выводится соответствующее сообщение.
+     */
     public void showRouteSortedDistance() {
         if (hashSetRouteCollection.isEmpty()) {
             System.out.println("Коллекция пуста");
@@ -111,7 +127,8 @@ public class CollectionManager {
     }
 
     /**
-     * Метод, сортирует элементы коллекции в порядке возрастания
+     * Выводит ID и имена всех маршрутов в коллекции, отсортированные по ID.
+     * Если коллекция пуста, выводится соответствующее сообщение.
      */
     public void showIdSortedCollection() {
         if (hashSetRouteCollection.isEmpty()) {
@@ -119,7 +136,7 @@ public class CollectionManager {
         } else {
             List<Route> routeList = new ArrayList<>(hashSetRouteCollection);
 
-           routeList.sort(Comparator.comparing(Route::getId));
+            routeList.sort(Comparator.comparing(Route::getId));
 
             for (Route route : routeList) {
                 System.out.println("ID: " + route.getId() + ", Name: " + route.getName());
@@ -127,13 +144,17 @@ public class CollectionManager {
         }
     }
 
-
+    /**
+     * Удаляет маршрут с указанным ID из коллекции.
+     *
+     * @param id ID маршрута, который необходимо удалить.
+     */
     public void removeById(Integer id) {
         if (hashSetRouteCollection.isEmpty()) {
             System.out.println("Коллекция пуста");
         } else {
             Route toRemove = null;
-            for (Route route :  hashSetRouteCollection) {
+            for (Route route : hashSetRouteCollection) {
                 if (route.getId().equals(id)) {
                     toRemove = route;
                     break;
@@ -145,6 +166,11 @@ public class CollectionManager {
         }
     }
 
+    /**
+     * Возвращает сумму расстояний всех маршрутов в коллекции.
+     *
+     * @return Сумма расстояний всех маршрутов. Если коллекция пуста, возвращает 0.
+     */
     public Long sumOfDistance() {
         if (hashSetRouteCollection.isEmpty()) {
             System.out.println("Коллекция пуста");
@@ -160,13 +186,24 @@ public class CollectionManager {
         }
     }
 
+    /**
+     * Возвращает максимальный ID среди всех маршрутов в коллекции.
+     *
+     * @return Максимальный ID.
+     */
     public int getMaxId() {
         return maxId;
     }
 
-
     /**
-     * Добавляет новый маршрут в коллекцию, генерируя ID автоматически (maxId + 1)
+     * Добавляет новый маршрут в коллекцию, автоматически генерируя ID (maxId + 1).
+     *
+     * @param name         Название маршрута.
+     * @param coordinates  Координаты маршрута.
+     * @param creationDate Дата создания маршрута.
+     * @param from         Начальная точка маршрута.
+     * @param to           Конечная точка маршрута.
+     * @param distance     Расстояние маршрута.
      */
     public void addRoute(String name, Coordinates coordinates, ZonedDateTime creationDate, Location from, Location to, Long distance) {
         int newId = maxId + 1;
@@ -176,8 +213,16 @@ public class CollectionManager {
     }
 
     /**
-     * Добавляет маршрут, если переданный ID больше текущего maxId, и обновляет maxId.
-     * Если переданный ID не больше maxId, маршрут не добавляется.
+     * Добавляет маршрут в коллекцию, если переданный ID больше текущего максимального ID.
+     * Если ID не больше текущего максимального, маршрут не добавляется.
+     *
+     * @param id           ID маршрута.
+     * @param name         Название маршрута.
+     * @param coordinates  Координаты маршрута.
+     * @param creationDate Дата создания маршрута.
+     * @param from         Начальная точка маршрута.
+     * @param to           Конечная точка маршрута.
+     * @param distance     Расстояние маршрута.
      */
     public void addIfMaxIdRoute(int id, String name, Coordinates coordinates, ZonedDateTime creationDate, Location from, Location to, Long distance) {
         if (id > maxId) {
@@ -187,29 +232,40 @@ public class CollectionManager {
         }
     }
 
+    /**
+     * Сохраняет коллекцию маршрутов в файл по указанному пути.
+     *
+     * @param filePath Путь к файлу, в который будет сохранена коллекция.
+     */
     public void save(String filePath) {
         FileManager csvParser = new FileManager();
         csvParser.parseToCsv(filePath, hashSetRouteCollection);
     }
 
+    /**
+     * Возвращает строку с описанием всех полей маршрута.
+     *
+     * @return Строка с описанием полей маршрута.
+     */
     public String getFieldNames() {
-        return "Список всех полей: \n" +
-                "Name (String)\n" +
-                "CoordinateX (Double)\n" +
-                "CoordinateY (Float)\n" +
-                "LocationFromX (Float)\n" +
-                "LocationFromY (Integer)\n" +
-                "LocationFromZ (Double)\n" +
-                "LocationFromName (String)\n" +
-                "LocationToX (Float)\n" +
-                "LocationToY (Integer)\n" +
-                "LocationToZ (Double)\n" +
-                "LocationToName (String)\n" +
+        return "Список всех полей: \n" + "Name (String)\n" + "CoordinateX (Double)\n" + "CoordinateY (Float)\n" +
+                "LocationFromX (Float)\n" + "LocationFromY (Integer)\n" + "LocationFromZ (Double)\n" + "LocationFromName (String)\n" +
+                "LocationToX (Float)\n" + "LocationToY (Integer)\n" + "LocationToZ (Double)\n" + "LocationToName (String)\n" +
                 "Distance (Long)\n";
     }
 
+    /**
+     * Обновляет значение указанного поля маршрута с заданным ID.
+     *
+     * @param id    ID маршрута, который необходимо обновить.
+     * @param field Название поля, которое необходимо обновить.
+     * @param value Новое значение поля.
+     */
     public void update(Integer id, String field, String value) {
         try {
+            if (field.equals("stop")) {
+                return;
+            }
             for (Route route : hashSetRouteCollection) {
                 if (route.getId().equals(id)) {
                     switch (field) {
@@ -252,7 +308,7 @@ public class CollectionManager {
                         case "Stop":
                             return;
                         default:
-                            System.out.println("Поле не распознано (если вы написали stop, то изменение завершено)");
+                            System.out.println("Поле не распознано");
                             return;
                     }
                     System.out.println("Значение поля было изменено");
@@ -267,12 +323,21 @@ public class CollectionManager {
         }
     }
 
+    /**
+     * Преобразует строку в Double, проверяя, что значение не превышает 750.
+     *
+     * @param value Строка, которую необходимо преобразовать.
+     * @return Преобразованное значение типа Double.
+     * @throws NullPointerException     Если строка пуста или равна null.
+     * @throws NumberFormatException    Если строка не может быть преобразована в Double.
+     * @throws IllegalArgumentException Если значение превышает 750.
+     */
     private Double parseDoubleWithMax(String value) {
         try {
             if (value == null || value.isEmpty()) throw new NullPointerException("Значение не может быть пустым");
             double parsedValue = Double.parseDouble(value);
             if (parsedValue > 750) {
-                throw new IllegalArgumentException("Значение CoordinateX не может быть больше " + (double) 750);
+                throw new IllegalArgumentException("Значение CoordinateX не может быть больше " + 750);
             }
             return parsedValue;
         } catch (NumberFormatException e) {
@@ -280,22 +345,48 @@ public class CollectionManager {
         }
     }
 
+    /**
+     * Преобразует строку в Long, проверяя, что значение больше 1.
+     *
+     * @param value Строка, которую необходимо преобразовать.
+     * @return Преобразованное значение типа Long.
+     * @throws NullPointerException     Если строка пуста или равна null.
+     * @throws NumberFormatException    Если строка не может быть преобразована в Long.
+     * @throws IllegalArgumentException Если значение меньше или равно 1.
+     */
     private Long parseLongWithMin(String value) {
         if (value == null || value.isEmpty()) throw new NullPointerException("Значение не может быть пустым");
         try {
             long parsedValue = Long.parseLong(value);
             if (parsedValue <= 1) {
-                throw new IllegalArgumentException("Значение Distance должно быть больше " + (long) 1);
+                throw new IllegalArgumentException("Значение Distance должно быть больше " + 1);
             }
             return parsedValue;
         } catch (NumberFormatException e) {
             throw new NumberFormatException("Неверный формат для Long: " + value);
         }
     }
+
+    /**
+     * Проверяет, что строка не пуста и не равна null.
+     *
+     * @param value Строка, которую необходимо проверить.
+     * @return Проверенная строка.
+     * @throws NullPointerException Если строка пуста или равна null.
+     */
     private String validateString(String value) {
         if (value == null || value.isEmpty()) throw new NullPointerException("Значение не может быть пустым");
         return value;
     }
+
+    /**
+     * Преобразует строку в Double.
+     *
+     * @param value Строка, которую необходимо преобразовать.
+     * @return Преобразованное значение типа Double.
+     * @throws NullPointerException  Если строка пуста или равна null.
+     * @throws NumberFormatException Если строка не может быть преобразована в Double.
+     */
     private Double parseDouble(String value) {
         if (value == null || value.isEmpty()) {
             throw new NullPointerException("Значение не может быть пустым");
@@ -307,6 +398,14 @@ public class CollectionManager {
         }
     }
 
+    /**
+     * Преобразует строку в Float.
+     *
+     * @param value Строка, которую необходимо преобразовать.
+     * @return Преобразованное значение типа Float.
+     * @throws NullPointerException  Если строка пуста или равна null.
+     * @throws NumberFormatException Если строка не может быть преобразована в Float.
+     */
     private Float parseFloat(String value) {
         if (value == null || value.isEmpty()) {
             throw new NullPointerException("Значение не может быть пустым");
@@ -318,6 +417,14 @@ public class CollectionManager {
         }
     }
 
+    /**
+     * Преобразует строку в Integer.
+     *
+     * @param value Строка, которую необходимо преобразовать.
+     * @return Преобразованное значение типа Integer.
+     * @throws NullPointerException  Если строка пуста или равна null.
+     * @throws NumberFormatException Если строка не может быть преобразована в Integer.
+     */
     private Integer parseInteger(String value) {
         if (value == null || value.isEmpty()) {
             throw new NullPointerException("Значение не может быть пустым");

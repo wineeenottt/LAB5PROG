@@ -16,6 +16,7 @@ import java.util.Set;
  */
 public class FileManager {
 
+
     /**
      * Парсит CSV файл и возвращает набор маршрутов.
      *
@@ -37,7 +38,7 @@ public class FileManager {
                 }
                 String[] fields = line.split(",");
                 if (fields.length < 14) {
-                    System.err.println("Ошибка: некорректный формат строки в CSV файле.");
+                    System.err.println("Ошибка: некорректный формат строки в CSV файле");
                     continue;
                 }
 

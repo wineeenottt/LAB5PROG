@@ -11,39 +11,59 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
- * Класс, управляющий выполнением скрипта
+ * Класс, управляющий выполнением скрипта.
+ * Предназначен для чтения и выполнения команд из указанного файла скрипта.
+ * Также обрабатывает возможные ошибки, такие как рекурсивный вызов скрипта или недоступность файла.
  */
 public class ExecuteScriptCommand implements CommandWithArguments {
     /**
-     * Массив, хранящий аргументы команды
+     * Массив, хранящий аргументы команды.
      */
     private String[] commandArguments;
+
     /**
-     * Поле, хранящее ссылку на объект класса CollectionManager
+     * Поле, хранящее ссылку на объект класса CollectionManager.
      */
     private CollectionManager collectionManager;
+
     /**
-     * Поле, хранящее ссылку на объект класса UserIO
+     * Поле, хранящее ссылку на объект класса UserIO.
      */
     private UserIO userIO;
+
     /**
-     * Поле, хранящее ссылку на объект, осуществляющий чтение полей из указанного в userIO потока ввода
+     * Поле, хранящее ссылку на объект, осуществляющий чтение полей из указанного в userIO потока ввода.
      */
     private RouteFieldsReader routeFieldsReader;
+
     /**
-     * Поле, хранящее адрес файла, из которого следует исполнять скрипт
+     * Поле, хранящее адрес файла, из которого следует исполнять скрипт.
      */
     private String scriptPath;
+
     /**
-     * Поле, хранящее объект класса ExecuteScript.Script
+     * Поле, хранящее объект класса ExecuteScript.Script.
      */
     private Script script;
 
+    /**
+     * Поле, хранящее путь к файлу ввода.
+     */
     private String inputFile;
+
+    /**
+     * Поле, хранящее данные ввода.
+     */
     private String inputData;
 
     /**
-     * Конструктор класса
+     * Конструктор класса ExecuteScriptCommand.
+     *
+     * @param collectionManager менеджер коллекции, который будет использоваться для выполнения команд.
+     * @param routeFieldsReader объект для чтения полей маршрута.
+     * @param script объект для управления выполнением скриптов.
+     * @param inputFile путь к файлу ввода.
+     * @param inputData данные ввода.
      */
     public ExecuteScriptCommand(CollectionManager collectionManager, RouteFieldsReader routeFieldsReader, Script script, String inputFile, String inputData) {
         this.collectionManager = collectionManager;
@@ -55,7 +75,8 @@ public class ExecuteScriptCommand implements CommandWithArguments {
 
     /**
      * Метод, исполняющий команду.
-     * В коллекцию scripts при начале исполнения добавляется адрес скрипта, далее идет само его исполнение, в конце адрес файла удаляется. В случае ошибки выводится соответствующее сообщение
+     * В коллекцию scripts при начале исполнения добавляется адрес скрипта, далее идет его исполнение, в конце адрес файла удаляется.
+     * В случае ошибки выводится соответствующее сообщение.
      */
     @Override
     public void execute() {
@@ -103,7 +124,9 @@ public class ExecuteScriptCommand implements CommandWithArguments {
     }
 
     /**
-     * Список аргументов команды
+     * Устанавливает аргументы команды.
+     *
+     * @param commandArguments массив аргументов команды.
      */
     @Override
     public void getCommandArguments(String[] commandArguments) {
@@ -111,7 +134,9 @@ public class ExecuteScriptCommand implements CommandWithArguments {
     }
 
     /**
-     * Описание команды execute_script
+     * Возвращает описание команды execute_script.
+     *
+     * @return строка с описанием команды.
      */
     @Override
     public String getDescription() {
@@ -119,27 +144,30 @@ public class ExecuteScriptCommand implements CommandWithArguments {
     }
 
     /**
-     * Статический класс, в котором хранится коллекция адресов скриптов
+     * Вложенный статический класс, в котором хранится коллекция адресов скриптов.
      */
     static class Script {
         /**
-         * Коллекция, в которой хранятся адреса запущенных скриптов
+         * Коллекция, в которой хранятся адреса запущенных скриптов.
          */
-        private ArrayList<String> scriptPaths = new ArrayList<String>();
+        private final ArrayList<String> scriptPaths = new ArrayList<String>();
 
         /**
-         * Метод, добавляющий скрипт в коллекцию
+         * Метод, добавляющий скрипт в коллекцию.
+         *
+         * @param scriptPath путь к скрипту, который нужно добавить в коллекцию.
          */
         public void putScript(String scriptPath) {
             scriptPaths.add(scriptPath);
         }
 
         /**
-         * Метод, убирающий скрипт из коллекции
+         * Метод, убирающий скрипт из коллекции.
+         *
+         * @param scriptPath путь к скрипту, который нужно удалить из коллекции.
          */
         public void removeScript(String scriptPath) {
             scriptPaths.remove(scriptPath);
         }
     }
 }
-

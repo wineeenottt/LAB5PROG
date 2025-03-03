@@ -207,5 +207,4 @@ public class Route {
                 ", distance=" + distance +
                 '}';
     }
-
 }

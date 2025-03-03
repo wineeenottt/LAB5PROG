@@ -1,13 +1,19 @@
 add
 add
 add_if_max
-save
 show
 help
 info
 history
 print_ascending
 print_field_ascending_distance
-sum_of_dictance
+sum_of_distance
 remove_by_id 1
+update 2
+Name Route2635
+CoordinateX 44
+stop
 execute_script Files/scriptforscript Files/Data
+remove_greater 4
+save
+clear
